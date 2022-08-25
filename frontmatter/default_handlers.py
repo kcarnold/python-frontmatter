@@ -147,8 +147,7 @@ DEFAULT_POST_TEMPLATE = """\
 {metadata}
 {end_delimiter}
 
-{content}
-"""
+{content}"""
 
 
 class BaseHandler:
@@ -213,15 +212,19 @@ class BaseHandler:
         """
         start_delimiter = kwargs.pop("start_delimiter", self.START_DELIMITER)
         end_delimiter = kwargs.pop("end_delimiter", self.END_DELIMITER)
+        strip = kwargs.pop("strip", True)
 
         metadata = self.export(post.metadata, **kwargs)
 
-        return DEFAULT_POST_TEMPLATE.format(
+        result = DEFAULT_POST_TEMPLATE.format(
             metadata=metadata,
             content=post.content,
             start_delimiter=start_delimiter,
             end_delimiter=end_delimiter,
-        ).strip()
+        )
+        if strip:
+            result = result.strip()
+        return result
 
 
 class YAMLHandler(BaseHandler):
